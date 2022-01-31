@@ -29,7 +29,6 @@ app.get('/artists', (req, res) => {
 })
 
 app.get('/artists/:id', (req, res) => {
-    // console.log(req.params);
     let artist = artists.find((artist  ) => {
         return artist.id === +req.params.id;
     })
@@ -45,7 +44,7 @@ app.post('/artists', (req, res) => {
     res.send(artist);
 });
 
-app.put('/artists/:id', (req, res) => {
+app.put('/artists/:id', (req, res) => { // changing something from array
     let artists = artists.find((artist  ) => {
         return artist.id === +req.params.id;
     });
@@ -53,7 +52,7 @@ app.put('/artists/:id', (req, res) => {
     res.sendStatus(200);
 });
 
-app.delete('/artists/:id', (req, res) => {
+app.delete('/artists/:id', (req, res) => { // Deleting something from array of tasks or smth else
     artists = artists.filter((artist) => {
         return artist.id !== +req.params.id;
     })
