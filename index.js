@@ -5,7 +5,7 @@ const app = express();
 
 app.use(express.json());
 
-const artists = [{
+let artists = [{
     id: 1,
     name: "Metallica"
 },
@@ -29,32 +29,35 @@ app.get('/artists', (req, res) => {
 })
 
 app.get('/artists/:id', (req, res) => {
-    console.log(req.params);
-    let artist;
-    artist = artists.find((artist   ) => {
+    // console.log(req.params);
+    let artist = artists.find((artist  ) => {
         return artist.id === +req.params.id;
     })
     res.send(artist);
 })
 
 app.post('/artists', (req, res) => {
-    console.log(req.body);
-    res.send('post data');
+    const artist = {
+        id: Date.now(),
+        name: req.body.name
+    };
+    artists.push(artist);
+    res.send(artist);
+});
+
+app.put('/artists/:id', (req, res) => {
+    let artists = artists.find((artist  ) => {
+        return artist.id === +req.params.id;
+    });
+    artist.name = req.body.name;
+    res.sendStatus(200);
+});
+
+app.delete('/artists/:id', (req, res) => {
+    artists = artists.filter((artist) => {
+        return artist.id !== +req.params.id;
+    })
+    res.sendStatus(200);
 })
 
-
 app.listen(PORT, () => console.log(`Server is listening on ${PORT} port`));
-
-// import express from "express";
-
-// const PORT = 4001;
-// const app = express();
-
-// app.use(express.json());    
-
-// app.post('/', (req, res) => {
-//     // console.log(req.body);
-//     res.status(200).json("Server is working");
-// })
-
-// app.listen(PORT, () => console.log(`Server is listening on ${PORT} port`)); 
