@@ -1,11 +1,14 @@
-const {todos} = require('../db.js');
+let {todos} = require('../db.js');
 const router = require('express').Router();
+
+const {v4} = require('uuid');
 
 router.post('/tasks', (req, res) => {
     const todo = {
-        id: Date.now(),
+        id: v4(), // string
         name: req.body.name,
-        done: req.body.done
+        done: false,
+        createdAt: new Date().toLocaleDateString('ru-ru')
     };
     todos.push(todo);
     res.send(todo);
