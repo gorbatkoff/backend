@@ -1,19 +1,21 @@
-const express = require('express')
-// const taskRoute = require('./routes/route.js')
-const {PORT} = require('./config');
-const fs = require('fs');
+const express = require('express');  // Импорт Express.js
+const {PORT} = require('./config'); // Импорт Порта из конфига
+const app = express(); // Создание объекта приложения
 
-const app = express();
+app.use(express.json()); // Распознование объекта как JSON 
 
-app.use(express.json());
+const taskRoute = require('./routes/route.js') // Импорт роутеров
 
-// app.use('/', taskRoute);
+app.use('/', taskRoute); // Маршрутизация
 
-fs.readFile('./tasks.json', (err, data) => {
-    if(err) throw err;
-    data = JSON.parse(data)
+// fs.readFile('./tasks.json', (err, data) => {
+//     if(err) throw err;
+//     data = JSON.parse(data)
     
-    console.log(data[1].name);
-})
+//     console.log(data[1].name);
+// })
 
-app.listen(PORT, () => console.log(`Server is listening on ${PORT} port`));
+app.listen(PORT, () => {
+    console.log(`Server is listening on ${PORT} port`);} // App listener
+);
+ 
