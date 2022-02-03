@@ -2,6 +2,7 @@
 const router = require('express').Router(); // import routes
 const { readDataBase, filter } = require('../helper'); // reading of database
 const { query, validationResult } = require('express-validator'); // import express-validotr
+const { errorsHandler } = require('../errorsHandler');
 
 router.get('/tasks', // getting array of tassk
     query('filterBy') // validator
