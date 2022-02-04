@@ -5,15 +5,26 @@ const { query, validationResult } = require('express-validator'); // import expr
 const { errorsHandler } = require('../errorsHandler');
 
 router.get('/tasks', // getting array of tassk
-    query('filterBy') // validator
-        .isIn(['', 'done', 'undone']) // validator
-        .withMessage('filterBy should include all, done or undone'), //message if we have errpr
+    query('filterBy')
+        .isIn(['', 'done', 'undone'])
+        .withMessage(
+            'query "filterBy" must be in array: ["all", "done", "undone"]'
+        ),
+    query('order')
+        .isIn(['asc', 'desc'])
+        .withMessage('query "order" must be in array: ["asc", "desc"]'),
+    query('pp').isInt().withMessage('"pp" must be integer'),
+    query('page')
+        .isInt()
+        .withMessage('"page" must be integer')
+        .custom((value) => value >= 1)
+        .withMessage('"page" cant be 0 '),
     (req, res) => {
         try {
             const errors = validationResult(req); // create array of errors
 
             if (!errors.isEmpty()) {
-                return res.status(400).json({ message: errorsHandler(errors) });
+                return res.status(503).json({ message: errorsHandler(errors) });
             }
 
             let todos = readDataBase(); // create array of current tasks
