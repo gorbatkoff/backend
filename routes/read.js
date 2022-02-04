@@ -24,15 +24,15 @@ router.get('/tasks', // getting array of tassk
             const errors = validationResult(req); // create array of errors
 
             if (!errors.isEmpty()) {
-                return res.status(503).json({ message: errorsHandler(errors) });
+                return res.status(400).json({ message: errorsHandler(errors) });
             }
 
             let todos = readDataBase(); // create array of current tasks
 
             const params = [ // add params to array of params
                 req.query.filterBy ?? 'all',
-                req.query.order ?? 'asc',
-                req.query.pp ?? 5,
+                req.query.order ?? 'desc',
+                req.query.pp,
                 req.query.page ?? 1
             ];
 
