@@ -24,7 +24,7 @@ router.get('/tasks', // getting array of tassk
             const errors = validationResult(req); // create array of errors
 
             if (!errors.isEmpty()) {
-                return res.status(400).json({ message: errorsHandler(errors) });
+                return res.status(400).json({ message: errorsHandler(errors) }); // message: "error", "error", "error"
             }
 
             let todos = readDataBase(); // create array of current tasks
