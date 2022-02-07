@@ -16,6 +16,8 @@ router.post('/tasks',
                 return res.status(400); // if we have one or more errors we return status code 400
             }
 
+            
+
             const todo = await pool.query(
                 'INSERT INTO todo (uuid, name, done, createdAt) VALUES ($1, $2, $3, $4) RETURNING*',
                 [v4(), req.body.name, req.body.done, new Date()]
