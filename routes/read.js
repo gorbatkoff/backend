@@ -26,7 +26,7 @@ router.get('/tasks', // getting array of tassk
             if (!errors.isEmpty()) {
                 return res.status(400).json({ message: errorsHandler(errors) }); // message: "error", "error", "error"
             }
-
+ 
             let todos = readDataBase(); // create array of current tasks
 
             const params = [ // add params to array of params
