@@ -1,10 +1,7 @@
-// const express = require('express');
 const router = require('express').Router(); // import routes
-const { readDataBase, filter } = require('../helper'); // reading of database
-const { query, validationResult } = require('express-validator'); // import express-validotr
-const { errorsHandler } = require('../errorsHandler');
+const { query } = require('express-validator'); // import express-validotr
 
-const {todos} = require('../models/index');
+const { todos } = require('../models/index'); // Importing database from file which filling database
 
 router.get('/tasks', // getting array of tassk
     query('filterBy')
@@ -12,66 +9,38 @@ router.get('/tasks', // getting array of tassk
         .withMessage(
             'query "filterBy" must be in array: ["all", "done", "undone"]'
         ),
+
     query('order')
         .isIn(['asc', 'desc'])
         .withMessage('query "order" must be in array: ["asc", "desc"]'),
+
     query('pp').isInt().withMessage('"pp" must be integer'),
+
     query('page')
         .isInt()
         .withMessage('"page" must be integer')
         .custom((value) => value >= 1)
         .withMessage('"page" cant be 0 '),
+
     async (req, res) => {
         try {
+
             let filterBy;
-            if (req.query.filterBy) {
+            if (req.query.filterBy) { // If user entered query params for fylterBy then
                 filterBy = req.query.filterBy;
             }
 
-            const pp = req.query.pp || 5;
-            const order = req.query.order || 'desc';
-            const page = req.query.page || 1;
+            const pp = req.query.pp || 5; // here we assignment to variable query param (Post per page)
+            const order = req.query.order || 'desc'; // here we assignment to variable order param. (Sort by ascending or descending)
+            const page = req.query.page || 1; // here we setting to page variable new statement (current page)
 
             let tasks = await todos.findAndCountAll({
-                where: !filterBy ? {} : { done: filterBy },
-                order: [['createdAt', order]],
+                where: filterBy ? { done: filterBy } : {},
+                order: [['createdAt', order]], // sql request which assumend 2 params with key and value
                 offset: pp * (page - 1),
-                limit: pp,
-            });
-
-            // const tasks = await todos.findAll({});
+                limit: pp
+            })
             res.send({ count: tasks.length, todos: tasks });
-            // res.send(tasks)
-            // console.log(res);
-
-
-            // console.log(tasks.every(task => task instanceof todos)); 
-            // console.log('All tasks: ', JSON.stringify(tasks, null, 2));
-
-
-            // console.log(todos.every(task => task instanceof))
-
-            // let getTodos = await todos.findAll();   
-            // console.log(getTodos.every(task => task instanceof db));
-            // console.log(db.findAll());
-            // console.log(todos)
-            // const errors = validationResult(req); // create array of errors
-
-            // if (!errors.isEmpty()) {
-            //     return res.status(400).json({ message: errorsHandler(errors) }); // message: "error", "error", "error"
-            // }
-
-            // let todos = readDataBase(); // create array of current tasks
-
-            // const params = [ // add params to array of params
-            //     req.query.filterBy ?? 'all',
-            //     req.query.order ?? 'desc',
-            //     req.query.pp,
-            //     req.query.page ?? 1
-            // ];
-
-            // todos = filter(...params); // filter array by params
-            // res.send(tasks) // return array of tasks to front page
         }
 
         catch (e) {

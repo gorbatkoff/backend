@@ -1,32 +1,29 @@
 const router = require('express').Router();
-const { readDataBase, writeDataBase } = require('../helper');
-const { param, validationResult } = require('express-validator');
+const { param } = require('express-validator');
 
-router.delete('/tasks/:id', param('id').notEmpty().withMessage("ID params shouldn't be empty"), (req, res) => {
+const { todos } = require('../models/index'); // Importing database from file which filling database
 
-    try {
-        const errors = validationResult(req);
+router.delete('/tasks/:id', param('id').notEmpty().withMessage("ID params shouldn't be empty"),
 
-        if (!errors.isEmpty()) {
-            return res.sendStatus(1254);
+    async (req, res) => {
+
+        try {
+
+            // Delete everyone named "Jane"
+            await todos.destroy({
+                where: {
+                    uuid: req.params.id
+                }
+            });
+
+            res.send("Ok");
         }
 
-        const id = req.params.id;
-        let todos = readDataBase();
+        catch (e) {
+            return res.sendStatus(400);
+        }
 
-        todos = todos.filter((todo) => {
-            return todo.uuid !== id;
-        })
-
-        writeDataBase(todos);
-        res.sendStatus(200);
-    }
-
-    catch (e) {
-        return res.sendStatus(400);
-    }
-
-});
+    });
 
 module.exports = router;
 
