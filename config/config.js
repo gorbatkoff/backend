@@ -7,5 +7,4 @@ module.exports = {
     database: process.env.DB_NAME || 'postgres',
     host: process.env.HOST || 'localhost',
     dialect: 'postgres',
-    // token_key: process.env.TOKEN_KEY,
 };
