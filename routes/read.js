@@ -25,26 +25,29 @@ router.get('/tasks', // getting array of tassk
     async (req, res) => {
         try {
 
-            let filterBy;
-            if (req.query.filterBy) { // If user entered query params for fylterBy then
-                filterBy = req.query.filterBy;
-            }
+            let filterBy = req.query.filterBy;
+
+            if(filterBy == "done") filterBy = true;
+            if(filterBy == 'undone') filterBy = false;
 
             const pp = req.query.pp || 5; // here we assignment to variable query param (Post per page)
             const order = req.query.order || 'desc'; // here we assignment to variable order param. (Sort by ascending or descending)
             const page = req.query.page || 1; // here we setting to page variable new statement (current page)
 
+            // console.log(filterBy);  
+
             let tasks = await todos.findAndCountAll({
-                where: filterBy ? { done: filterBy } : {},
+                where: !filterBy ? {} : {done: filterBy},
                 order: [['createdAt', order]], // sql request which assumend 2 params with key and value
                 offset: pp * (page - 1),
                 limit: pp
             })
-            res.send({ count: tasks.length, todos: tasks });
+            return res.send({ count: tasks.length, todos: tasks });
         }
 
         catch (e) {
-            return res.sendStatus(400); //if we have some problems return 400
+            // return res.sendStatus(400).json({message: e}); //if we have some problems return 400
+            throw err;
         }
 
     })

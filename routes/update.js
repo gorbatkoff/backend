@@ -1,12 +1,13 @@
 const router = require('express').Router();
 const { body, param, validationResult } = require('express-validator');
-
 const { todos } = require('../models/index'); // Importing database from file which filling database
 const { Op } = require('sequelize');
+const { errorsHandler } = require('../errorsHandler');
 
 router.patch('/tasks/:id',
     param('id').notEmpty().withMessage('ID is empty'),
     body('name').isLength({ min: 1 }).withMessage("New task length is lesser then should be"),
+    errorsHandler,
     async (req, res) => {
 
         try {
@@ -18,8 +19,7 @@ router.patch('/tasks/:id',
             });
 
             if (isTaskAlreadyExist) {
-                res.send("This task already exist");
-                return;
+                throw new Error('This task already exist!');
             }
 
             await todos.update({
@@ -34,7 +34,7 @@ router.patch('/tasks/:id',
         }
 
         catch (e) {
-            return res.sendStatus(400);
+            return res.status(400).json({message: e.message});
         }
 
     });
