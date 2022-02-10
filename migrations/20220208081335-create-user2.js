@@ -1,7 +1,36 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
+    await queryInterface.createTable('users', {
+      id: {
+        allowNull: false,
+        primaryKey: true,
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4
+      },
+      login: {
+        type: Sequelize.STRING,
+      },
+      password: {
+        type: Sequelize.BOOLEAN
+      },
+      
+    },
+      {
+        timestamps: true,
+        createdAt: true,
+        updatedAt: false,
+      }
+    );
+
     await queryInterface.createTable('todos', {
+      user_id: {
+        type: Sequelize.UUID,
+        references: {
+          model: 'users',
+          key: 'id'
+        },
+      },
       uuid: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -28,6 +57,6 @@ module.exports = {
     );
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('todos');
+    await queryInterface.dropTable('users');
   }
 };
