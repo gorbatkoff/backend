@@ -3,7 +3,7 @@ const {PORT} = require('./config'); // Импорт Порта из конфиг
 const app = express(); // Создание объекта приложения
 const cors = require('cors'); // Providing middleware
 const cookieParser = require('cookie-parser');
-
+const recursive = require('recursive-readdir-sync');
 
 app.use(cors()); // usage cors middleware
 app.use(express.json()); // Распознование объекта как JSON 
@@ -11,6 +11,12 @@ app.use(cookieParser()); // Cookie parsing for autorization
 
 const taskRoute = require('./routes/route.js'); // Импорт роутеров
 app.use('/', taskRoute); // Маршрутизация
+
+
+
+recursive(`${__dirname}/routes`).forEach((file) =>
+    app.use('/api', require(file))
+);
 
 app.listen(PORT, () => {
     console.log(`Server is listening on ${PORT} port`);} // App listener
