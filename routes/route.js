@@ -7,5 +7,6 @@ router.use('/', require('./todo.patch'))
 router.use('/', require('./todo.delete'))
 
 router.use('/', require('./user.register'))
+router.use('/', require('./user.login'))
 
 module.exports = router;
