@@ -10,7 +10,6 @@ app.use(express.json()); // Распознование объекта как JSO
 app.use(cookieParser()); // Cookie parsing for autorization
 
 const taskRoute = require('./routes/route.js'); // Импорт роутеров
-
 app.use('/', taskRoute); // Маршрутизация
 
 app.listen(PORT, () => {
